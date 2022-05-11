@@ -12,8 +12,6 @@ public class Score {
 	private ScorePK id = new ScorePK();
 	private Double value;
 	
-	public Score() { }
-	
 	public void setMovie(Movie movie) {
 		id.setMovie(movie);
 	}
