@@ -9,42 +9,46 @@ function Listing() {
 
     const [pageNumber, setPageNumber] = useState(0);
 
+    const [page, setPage] = useState<MoviePage>({
+        content: [],
+        last: true,
+        totalPages: 0,
+        totalElements: 0,
+        size: 12,
+        number: 0,
+        first: true,
+        numberOfElements: 0,
+        empty: true
+    });
+
     //Antes o get era executado fora do ciclo de vida do componente.     
     //Desta forma, provavelmente apresentaria comportamentos inesperados, 
     //como ser executado várias vezes.
     //Isso foi resolvido ao usar o hook useEffect, que executa agora dentro do ciclo de vida do app
     //useEffect->Executa algo na instanciação ou destruição do component, observa algo
     useEffect(() => {
-        axios.get(`${BASE_URL}/movies?size=5&page=1`)
+        axios.get(`${BASE_URL}/movies?size=12&page=${pageNumber}&sort=title`)
             .then(response => {
                 const data = response.data as MoviePage;
-                console.log(data);
-                setPageNumber(data.number);
+                setPage(data);
             });
-    }, []); //lista de objetos para observar e reexecutar a função, caso sejam alterados
+    }, [pageNumber]);
+    //lista de objetos para observar e reexecutar a função, caso sejam alterados
 
     return (
         <>
-            <p>{pageNumber}</p>
             <Pagination />
 
             <div className="container">
                 <div className="row">
-                    <div className="col-sm-6 col-lg-4 col-xl-3 mb-3">
-                        <MovieCard />
-                    </div>
-                    <div className="col-sm-6 col-lg-4 col-xl-3 mb-3">
-                        <MovieCard />
-                    </div>
-                    <div className="col-sm-6 col-lg-4 col-xl-3 mb-3">
-                        <MovieCard />
-                    </div>
-                    <div className="col-sm-6 col-lg-4 col-xl-3 mb-3">
-                        <MovieCard />
-                    </div>
-                    <div className="col-sm-6 col-lg-4 col-xl-3 mb-3">
-                        <MovieCard />
-                    </div>
+                    {page.content.map(movie => (
+                        /*Em uma renderização dinâmica de coleção,  
+                        cada elemento renderizado DEVE possuir um atributo key*/
+                        <div key={movie.id} className="col-sm-6 col-lg-4 col-xl-3 mb-3">
+                            <MovieCard movie={movie} />
+                        </div>
+                    )
+                    )}
                 </div>
             </div>
         </>
