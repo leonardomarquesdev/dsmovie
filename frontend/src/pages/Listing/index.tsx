@@ -35,9 +35,13 @@ function Listing() {
     }, [pageNumber]);
     //lista de objetos para observar e reexecutar a função, caso sejam alterados
 
+    const handlePageChange = (newPageNumber : number) => {
+        setPageNumber(newPageNumber);
+    }
+
     return (
         <>
-            <Pagination />
+            <Pagination page={page} onChange={handlePageChange} />
 
             <div className="container">
                 <div className="row">
